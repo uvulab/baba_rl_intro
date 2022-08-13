@@ -15,4 +15,27 @@ This first attempt is based on [Grounding Language to Entities and Dynamics for 
 
 ## Internal Rule Task
 
-The external rule task is easier to train and useful for choosing the right reinforcement learning parameters; but for actually playing Baba Is You, a different approach is needed, because the rules exist inside the grid and can be changed by the player. We now attempt to put the rules inside the grid and extract the same key:value pairs that we started with before.
+The external rule task is easier to train and useful for choosing the right reinforcement learning parameters; but for actually playing Baba Is You, a different approach is needed, because the rules exist inside the grid and can be changed by the player. We now attempt to put the rules inside the grid and extract the same key:value pairs that we started with before. Figure 2 illustrates.
+
+![Internal Rule Model](https://github.com/uvulab/baba_rl_intro/blob/main/internal.png)
+**Figure 2: Internal Rule Model. Input grid channels are separated for each category: objects, symbols, and roles. Queries and values must be learned to perform the same attention step as in the previous task.**
+
+As before, each object must be converted into a query, which matches a provided symbol/key. The main difference is that a convolutional layer must now be trained to detect roles such as "is you" and place a value representation "you" in the same position as the corresponding key. Ideally, the position of the "a" will then contain a key:value pair ("a:you") which can then be queried by the object "A".
+
+Currently, we provide separate input grids for objects, symbols, and roles. A more challenging version of this problem would have all inputs together, so that the agent must learn the difference between the three categories.
+
+## Training
+
+We use [Proximal Policy Optimization](https://arxiv.org/abs/1707.06347) as our reinforcement learning algorithm, based on 
+
+## Usage
+
+Install tensorflow and numpy.
+
+Create a directory called "models" in the working directory.
+
+Edit the parameters in `main.py` to choose the task (internal or external), grid size, model name, etc.
+
+Run `python main.py`.
+
+You should see the success rate start to improve after several hours. Full training, especially for the internal rule task, can take 24 hours or more, depending on how fast your system is.

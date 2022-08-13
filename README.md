@@ -8,21 +8,21 @@ This project focuses on such an introductory scenario in the world of Baba Is Yo
 
 ## External Rule Task
 
-This first attempt is based on [Grounding Language to Entities and Dynamics for Generalization in Reinforcement Learning](https://proceedings.mlr.press/v139/hanjie21a.html), in which a rulebook describes the role of each object in a grid. The goal is to convert the object representation into a role representation, so that reinforcement learning can be based on the roles of the objects rather than the objects themselves. Applying these methods to Baba Is You, the rules become key:value pairs of the form "a:you, b:win, c:lose". For each object A, B, C, etc., a *query* must be learned to match the object to the associated key, for example object "A" to symbol "a". Then, an [Attention](https://proceedings.neurips.cc/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html) layer returns the value/role for each query, so "A" becomes "you". Once the objects are replaced by their roles, regular reinforcement learning may proceed with the goal of always moving "you" to "win". Figure 1 illustrates the process.
+This first attempt is based on [Grounding Language to Entities and Dynamics for Generalization in Reinforcement Learning](https://proceedings.mlr.press/v139/hanjie21a.html), in which a rulebook describes the role of each object in a grid. The goal is to convert the object representation into a role representation, so that reinforcement learning can be based on the roles of the objects rather than the objects themselves. Applying these methods to Baba Is You, the rules become key:value pairs of the form "a:you, b:win, c:lose". For each object A, B, C, etc., a *query* must be learned to match the object to the associated key, for example object "A" to name "a". Then, an [Attention](https://proceedings.neurips.cc/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html) layer returns the value/role for each query, so "A" becomes "you". Once the objects are replaced by their roles, regular reinforcement learning may proceed with the goal of always moving "you" to "win". Figure 1 illustrates the process.
 
 ![External Rule Model](https://github.com/uvulab/baba_rl_intro/blob/main/external.png)
-**Figure 1: External Rule Model. Inputs are on the top row: grid/objects, keys/symbols, and values/roles. An attention layer converts each object to its role.**
+**Figure 1: External Rule Model. Inputs are on the top row: grid/objects, keys/names, and values/roles. An attention layer converts each object to its role.**
 
 ## Internal Rule Task
 
 The external rule task is easier to train and useful for choosing the right reinforcement learning parameters; but for actually playing Baba Is You, a different approach is needed, because the rules exist inside the grid and can be changed by the player. (In this task, the rules still cannot change because they're on the edge of the grid, but changing rules will be necessary in the future.) We now attempt to put the rules inside the grid and extract the same key:value pairs that we started with before. Figure 2 illustrates.
 
 ![Internal Rule Model](https://github.com/uvulab/baba_rl_intro/blob/main/internal.png)
-**Figure 2: Internal Rule Model. Input grid channels are separated for each category: objects, symbols, and roles. Queries and values must be learned to perform the same attention step as in the previous task.**
+**Figure 2: Internal Rule Model. Input grid channels are separated for each category: objects, names, and roles. Queries and values must be learned to perform the same attention step as in the previous task.**
 
-As before, each object must be converted into a query, which matches a provided symbol/key. The main difference is that a convolutional layer must now be trained to detect roles such as "is you" and place a value representation "you" in the same position as the corresponding key. Ideally, the position of the "a" will then contain a key:value pair ("a:you") which can be queried by the object "A". Note: empty spaces in the grid will contain "nothing:nothing" rules.
+As before, each object must be converted into a query, which matches a provided name/key. The main difference is that a convolutional layer must now be trained to detect roles such as "is you" and place a value representation "you" in the same position as the corresponding key. Ideally, the position of the "a" will then contain a key:value pair ("a:you") which can be queried by the object "A". Note: empty spaces in the grid will contain "nothing:nothing" rules.
 
-Currently, we provide separate input grids for objects, symbols, and roles. A more challenging version of this problem would have all inputs together, so that the agent must learn the difference between the three categories.
+Currently, we provide separate input grids for objects, names, and roles. A more challenging version of this problem would have all inputs together, so that the agent must learn the difference between the three categories.
 
 ## Training
 

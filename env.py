@@ -177,7 +177,7 @@ class Game:
 		self.already_moved = []
 
 		self.t += 1
-		reward = 0.0#-1.0/self.max_t# * (1.0 if did_move else 2.0)
+		reward = 0.0
 		done = False
 
 		if self.t >= self.max_t:
@@ -220,7 +220,7 @@ class Game:
 			q = result[:,:,BABA_OBJ:SKULL_OBJ+1]
 			k = result[:,:,BABA_NAME:SKULL_NAME+1]
 			v = result[:,:,IS:DEFEAT+1]
-			return [q, k, v]
+			return [q, k, v] #separate grids for objects, names, and roles. for a single grid, return result instead.
 			#return result
 
 	def read_roles(self):

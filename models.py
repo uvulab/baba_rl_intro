@@ -15,6 +15,7 @@ def ExternalRuleModel(params):
 	grid = Input(shape=(grid_rows, grid_cols, grid_channels))
 	keys = Input(shape=(num_rules, key_dim))
 	vals = Input(shape=(num_rules, val_dim))
+	#softmax activation for the queries because the goal is to match one-hot encoded keys
 	query = Conv2D(key_dim, 1, data_format='channels_last', padding='same', activation='softmax', kernel_initializer='zeros')(grid)
 	query = Reshape((grid_rows * grid_cols, key_dim))(query)
 	att = Attention(use_scale=True)([query, vals, keys]) #remember to increase the scale after initializing the weights
